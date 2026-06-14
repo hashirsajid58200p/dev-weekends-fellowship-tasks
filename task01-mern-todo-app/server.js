@@ -2,9 +2,14 @@ const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const connectDB = require("./config/db");
 
 //env config
 dotenv.config();
+
+// DB connection
+
+connectDB();
 
 // rest object
 const app = express();
@@ -16,7 +21,7 @@ app.use(cors());
 
 // routes
 app.use("/api/v1/test", require("./routes/testRouter"));
-
+app.use("/api/v1/user", require("./routes/userRoute"));
 // port
 const Port = process.env.PORT;
 
