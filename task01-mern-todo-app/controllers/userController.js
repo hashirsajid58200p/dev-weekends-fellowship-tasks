@@ -46,17 +46,9 @@ const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     // find user
-    const user = await userModel.findOne({ email });
+    const user = await userModel.findOne({ email, password });
     // validation
     if (!user) {
-      return res.status(404).send({
-        success: false,
-        message: "invalid email or password",
-      });
-    }
-    // compare password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
       return res.status(404).send({
         success: false,
         message: "invalid email or password",
