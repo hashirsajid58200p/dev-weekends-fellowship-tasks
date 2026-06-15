@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const bcrypt = require("bcryptjs");
 
 const registerController = async (req, res) => {
   try {
@@ -18,8 +19,11 @@ const registerController = async (req, res) => {
         message: "user already exists",
       });
     }
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+
     // save user
-    const newUser = new userModel({ username, email, password });
+    const newUser = new userModel({ username, email, password: hashPassword });
     await newUser.save();
 
     res.status(201).send({
@@ -42,9 +46,17 @@ const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     // find user
-    const user = await userModel.findOne({ email, password });
+    const user = await userModel.findOne({ email });
     // validation
     if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "invalid email or password",
+      });
+    }
+    // compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       return res.status(404).send({
         success: false,
         message: "invalid email or password",
