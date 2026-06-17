@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 import AuthServices from "../../Services/AuthService";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/ErrorMessage";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -20,9 +21,9 @@ const Login = () => {
       navigate("/home");
       localStorage.setItem("todoapp", JSON.stringify(res.data));
       console.log(res.data);
-    } catch (error) {
-      toast.error("something went wrong");
-      console.log(error);
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      console.log(err);
     }
   };
 

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 import AuthServices from "../../Services/AuthService";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/ErrorMessage";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -18,9 +19,9 @@ const Register = () => {
       toast.success(res.data.message);
       navigate("/login");
       console.log(res.data);
-    } catch (error) {
-      toast.error("something went wrong");
-      console.log(error);
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+      console.log(err);
     }
   };
   return (

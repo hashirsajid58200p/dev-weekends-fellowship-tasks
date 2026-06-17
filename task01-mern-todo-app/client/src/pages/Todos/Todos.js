@@ -1,7 +1,12 @@
 import React from "react";
+import Navbar from "../../components/Layout/Navbar";
 
 const Todos = () => {
-  return <div>Todos</div>;
+  return (
+    <>
+      <Navbar />
+    </>
+  );
 };
 
 export default Todos;
