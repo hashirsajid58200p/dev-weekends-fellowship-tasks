@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const JWT = require("jsonwebtoken");
 
 const registerController = async (req, res) => {
   try {
@@ -46,7 +47,7 @@ const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     // find user
-    const user = await userModel.findOne({ email, password });
+    const user = await userModel.findOne({ email });
     // validation
     if (!user) {
       return res.status(404).send({
@@ -54,10 +55,27 @@ const loginController = async (req, res) => {
         message: "invalid email or password",
       });
     }
+    // match password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(500).send({
+        success: false,
+        message: "invalid credentials",
+      });
+    }
+    // Token
+    const token = await JWT.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "99d",
+    });
     res.status(200).send({
       success: true,
       message: "login successfully",
-      user,
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+      },
     });
   } catch (error) {
     res.status(500).send({
