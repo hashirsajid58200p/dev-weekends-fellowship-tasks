@@ -1,0 +1,10 @@
+{
+  "name": "dev-weekends-fellowship-tasks-root",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm run dev --prefix ./task01-mern-todo-app",
+    "both": "npm run both --prefix ./task01-mern-todo-app",
+    "server": "npm run server --prefix ./task01-mern-todo-app",
+    "client": "npm run client --prefix ./task01-mern-todo-app"
+  }
+}
