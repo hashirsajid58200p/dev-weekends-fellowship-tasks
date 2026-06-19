@@ -7,6 +7,7 @@ import Spinner from "../../components/Layout/Spinner";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -14,6 +15,21 @@ const Home = () => {
   // handle modal
   const openModalHandler = () => {
     setShowModal(true);
+  };
+
+  // search
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    let filterList = allTask?.filter((item) =>
+      item.title.toLowerCase().match(query.toLowerCase()),
+    );
+    setSearchQuery(query);
+    if (query && filterList.length > 0) {
+      setAllTask(filterList && filterList);
+    } else {
+      getUserTask();
+    }
   };
 
   // get user todos
@@ -42,7 +58,12 @@ const Home = () => {
       <div className="container">
         <div className="add-task">
           <h1>Your Task</h1>
-          <input type="text" placeholder="search your todo" />
+          <input
+            type="text"
+            placeholder="search your task"
+            value={searchQuery}
+            onChange={handleSearch}
+          />
           <button className="btn btn-primary" onClick={openModalHandler}>
             Create Task <i className="fa-solid fa-plus"></i>
           </button>
