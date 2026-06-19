@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import todoImg from "../../assets/images/todo.webp";
+import todoImg from "../../assets/images/todo.png";
 import "./Landing.css";
 
 const Landing = () => {

@@ -11,6 +11,7 @@ module.exports = async (req, res, next) => {
           message: "unauthorized",
         });
       } else {
+        req.body = req.body || {}; // <-- Add this line
         req.body.id = decoded.id;
         next();
       }

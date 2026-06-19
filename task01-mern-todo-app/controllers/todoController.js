@@ -61,4 +61,76 @@ const getTodoController = async (req, res) => {
   }
 };
 
-module.exports = { createTodoController, getTodoController };
+// detete api
+
+const deleteTodoController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(404).send({
+        success: false,
+        message: "no todo found with id",
+      });
+    }
+    // find id
+    const todo = await todoModel.findByIdAndDelete({ _id: id });
+    if (!todo) {
+      return res.status(404).send({
+        success: false,
+        message: "no task found",
+      });
+    }
+    res.status(200).send({
+      success: true,
+      message: "task deleted successfully",
+      todo,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      error,
+      message: "error in deteting todo api",
+    });
+  }
+};
+
+// Update todo
+
+const updateTodoController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(404).send({
+        success: false,
+        message: "please provide todo id",
+      });
+    }
+    const data = req.body;
+    //update
+    const todo = await todoModel.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { returnOriginal: false },
+    );
+    res.status(200).send({
+      success: true,
+      message: "your task has been updated",
+      todo,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "error in update todo api",
+      error,
+    });
+  }
+};
+
+module.exports = {
+  createTodoController,
+  getTodoController,
+  deleteTodoController,
+  updateTodoController,
+};

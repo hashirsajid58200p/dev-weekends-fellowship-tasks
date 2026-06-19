@@ -1,0 +1,35 @@
+.add-task{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+ margin-top: 20px;   
+}
+
+.add-task input[type="search"]
+{
+    width: 500px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Card */
+
+.chead{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.chead .task-incmp{
+background-color: #f7e373;
+padding: 5px 10px;
+font-family: cursive;
+border-radius: 5px;
+}
+.chead .task-cmp{
+background-color: #097969;
+padding: 5px 10px;
+font-family: cursive;
+border-radius: 5px;
+}
