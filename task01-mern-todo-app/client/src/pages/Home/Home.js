@@ -3,13 +3,14 @@ import Navbar from "../../components/Layout/Navbar";
 import PopupModel from "../../components/Layout/PopupModel";
 import todoServices from "../../Services/TodoService";
 import Card from "../../components/Card/Card";
+import Spinner from "../../components/Layout/Spinner";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [allTask, setAllTask] = useState("");
+  const [allTask, setAllTask] = useState([]);
   // handle modal
   const openModalHandler = () => {
     setShowModal(true);
