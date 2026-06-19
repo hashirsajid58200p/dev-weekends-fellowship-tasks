@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import todoServices from "../../Services/TodoService";
 
-const EditTodo = ({ task, setShowModal }) => {
+const EditTodo = ({ task, setShowModal, getUserTask }) => {
   const [title, setTitle] = useState(task?.title);
   const [description, setDescription] = useState(task?.description);
   const [isCompleted, setIsCompleted] = useState(task?.isCompleted);
@@ -30,6 +30,7 @@ const EditTodo = ({ task, setShowModal }) => {
       toast.success("Task Updated successfully");
       setTitle("");
       setDescription("");
+      getUserTask();
     } catch (error) {
       console.log(error);
       toast.error(error);

@@ -9,6 +9,7 @@ const PopupModel = ({
   setDescription,
   showModal,
   setShowModal,
+  getUserTask,
 }) => {
   // handle close
   const handleClose = () => {
@@ -27,6 +28,7 @@ const PopupModel = ({
       }
       const todo = await todoServices.createTodo(data);
       setShowModal(false);
+      getUserTask();
       toast.success("Task created successfully");
       setTitle("");
       setDescription("");

@@ -6,6 +6,7 @@ import Card from "../../components/Card/Card";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [allTask, setAllTask] = useState("");
@@ -14,18 +15,23 @@ const Home = () => {
     setShowModal(true);
   };
 
+  // get user todos
+  const userData = JSON.parse(localStorage.getItem("todoapp"));
+  const id = userData && userData.user.id;
+  const getUserTask = async () => {
+    setLoading(true);
+    try {
+      const { data } = await todoServices.getAllTodo(id);
+      setLoading(false);
+      console.log(data);
+      setAllTask(data?.todos);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("todoapp"));
-    const id = userData && userData.user.id;
-    const getUserTask = async () => {
-      try {
-        const { data } = await todoServices.getAllTodo(id);
-        console.log(data);
-        setAllTask(data?.todos);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getUserTask();
   }, []);
 
@@ -40,7 +46,11 @@ const Home = () => {
             Create Task <i className="fa-solid fa-plus"></i>
           </button>
         </div>
-        {allTask && <Card allTask={allTask} />}
+        {loading ? (
+          <Spinner />
+        ) : (
+          allTask && <Card allTask={allTask} getUserTask={getUserTask} />
+        )}
         {/* ============Modal============ */}
         <PopupModel
           showModal={showModal}
@@ -49,6 +59,7 @@ const Home = () => {
           setTitle={setTitle}
           description={description}
           setDescription={setDescription}
+          getUserTask={getUserTask}
         />
       </div>
     </>

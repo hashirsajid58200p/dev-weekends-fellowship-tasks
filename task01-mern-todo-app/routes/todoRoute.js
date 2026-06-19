@@ -18,7 +18,7 @@ router.post("/create", authMiddleware, createTodoController);
 router.post("/getAll/:userId", authMiddleware, getTodoController);
 
 // delete todo
-router.post("/delete/:id", authMiddleware, deleteTodoController);
+router.delete("/delete/:id", authMiddleware, deleteTodoController);
 
 //update todo
 router.patch("/update/:id", authMiddleware, updateTodoController);
