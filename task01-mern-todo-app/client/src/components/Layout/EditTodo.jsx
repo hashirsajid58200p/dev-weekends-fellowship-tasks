@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import todoServices from "../../Services/TodoService";
+import { getErrorMessage } from "../../utils/ErrorMessage";
 
 const EditTodo = ({ task, setShowModal, getUserTask }) => {
   const [title, setTitle] = useState(task?.title);
@@ -33,7 +34,7 @@ const EditTodo = ({ task, setShowModal, getUserTask }) => {
       getUserTask();
     } catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.error(getErrorMessage(error));
     }
   };
   return (
@@ -82,8 +83,12 @@ const EditTodo = ({ task, setShowModal, getUserTask }) => {
                   <label htmlFor="floatingTextarea">description</label>
                 </div>
                 <div className="my-3">
-                  <select className="form-select" onChange={handleSelectChange}>
-                    <option selected>Select Status</option>
+                  <select
+                    className="form-select"
+                    defaultValue="Select Status"
+                    onChange={handleSelectChange}
+                  >
+                    <option value="Select Status">Select Status</option>
                     <option value={true}>Completed</option>
                     <option value={false}>Incompleted</option>
                   </select>

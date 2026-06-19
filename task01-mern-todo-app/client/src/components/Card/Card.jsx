@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import EditTodo from "../Layout/EditTodo";
 import todoServices from "../../Services/TodoService";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/ErrorMessage";
 
 const Card = ({ allTask, getUserTask }) => {
-  const [showModal, setShowModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
-  // edit modal handler
-  const handleEdit = () => {
-    setShowModal(true);
-  };
   // delete handler
   const handleDelete = async (id) => {
     try {
@@ -18,22 +15,21 @@ const Card = ({ allTask, getUserTask }) => {
       getUserTask();
     } catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.error(getErrorMessage(error));
     }
   };
   return (
     <>
       <div className="card-container">
         {allTask?.map((task, i) => (
-          <>
+          <React.Fragment key={task?._id || i}>
             <div
               className="card border-primary mb-3 mt-3"
               style={{ maxWidth: "18rem" }}
-              key={i}
             >
               <div className="card-header">
                 <div className="chead">
-                  <h6>{task?.title.substring(0, 10)}</h6>
+                  <h6>{task?.title?.substring(0, 10)}</h6>
                   <h6
                     className={
                       task?.isCompleted === true ? "task-cmp" : "task-incmp"
@@ -46,13 +42,13 @@ const Card = ({ allTask, getUserTask }) => {
               <div className="card-body">
                 <h6 style={{ fontWeight: "bold" }}>{task?.title}</h6>
                 <p className="card-text">{task?.description}</p>
-                <h6>Date : {task?.createdAt.substring(0, 10)}</h6>
+                <h6>Date : {task?.createdAt?.substring(0, 10)}</h6>
               </div>
               <div className="card-footer bg-transparent border-primary">
                 <button
                   className="btn btn-warning"
                   title="Edit"
-                  onClick={handleEdit}
+                  onClick={() => setSelectedTask(task)}
                 >
                   <i className="fa-solid fa-pen-to-square"></i>
                 </button>
@@ -65,18 +61,16 @@ const Card = ({ allTask, getUserTask }) => {
                 </button>
               </div>
             </div>
-            <div>
-              {showModal && (
-                <EditTodo
-                  task={task}
-                  setShowModal={setShowModal}
-                  getUserTask={getUserTask}
-                />
-              )}
-            </div>
-          </>
+          </React.Fragment>
         ))}
       </div>
+      {selectedTask && (
+        <EditTodo
+          task={selectedTask}
+          setShowModal={() => setSelectedTask(null)}
+          getUserTask={getUserTask}
+        />
+      )}
     </>
   );
 };

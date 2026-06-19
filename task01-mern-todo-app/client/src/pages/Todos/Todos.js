@@ -26,15 +26,26 @@ const Todos = () => {
   };
 
   useEffect(() => {
-    const incomplete = allTask?.filter((item) => item?.isCompleted === false);
-    const completed = allTask?.filter((item) => item?.isCompleted === true);
-    if (todoStatus === "incomplete") {
-      setFilterTask(incomplete);
-    } else if (todoStatus === "completed") {
-      setFilterTask(completed);
-    }
     getUserTask();
-  }, [todoStatus]);
+  }, []);
+
+  useEffect(() => {
+    if (!todoStatus || todoStatus === "Select Status") {
+      setFilterTask(allTask || []);
+    } else {
+      const statusToCompare = todoStatus.toLowerCase();
+      const filtered = allTask?.filter((item) => {
+        if (statusToCompare === "complete" || statusToCompare === "completed") {
+          return item?.isCompleted === true;
+        }
+        if (statusToCompare === "incomplete") {
+          return item?.isCompleted === false;
+        }
+        return true;
+      });
+      setFilterTask(filtered || []);
+    }
+  }, [allTask, todoStatus]);
 
   return (
     <>
@@ -44,11 +55,12 @@ const Todos = () => {
         <div className="filter-group">
           <select
             className="form-select"
+            defaultValue="Select Status"
             onChange={(e) => {
               setTodoStatus(e.target.value);
             }}
           >
-            <option selected>Select Status</option>
+            <option value="Select Status">Select Status</option>
             <option value="Incomplete">Incomplete</option>
             <option value="Complete">Complete</option>
           </select>
@@ -62,31 +74,29 @@ const Todos = () => {
           <h1 className="no-task">You have no task</h1>
         ) : (
           filterTask?.map((task, i) => (
-            <>
-              <div
-                className="card border-primary mb-3 mt-3"
-                style={{ maxWidth: "18rem" }}
-                key={i}
-              >
-                <div className="card-header">
-                  <div className="chead">
-                    <h6>{task?.title.substring(0, 10)}</h6>
-                    <h6
-                      className={
-                        task?.isCompleted === true ? "task-cmp" : "task-incmp"
-                      }
-                    >
-                      {task?.isCompleted === true ? "Completed" : "Incomplete"}
-                    </h6>
-                  </div>
-                </div>
-                <div className="card-body">
-                  <h6 style={{ fontWeight: "bold" }}>{task?.title}</h6>
-                  <p className="card-text">{task?.description}</p>
-                  <h6>Date : {task?.createdAt.substring(0, 10)}</h6>
+            <div
+              className="card border-primary mb-3 mt-3"
+              style={{ maxWidth: "18rem" }}
+              key={task?._id || i}
+            >
+              <div className="card-header">
+                <div className="chead">
+                  <h6>{task?.title?.substring(0, 10)}</h6>
+                  <h6
+                    className={
+                      task?.isCompleted === true ? "task-cmp" : "task-incmp"
+                    }
+                  >
+                    {task?.isCompleted === true ? "Completed" : "Incomplete"}
+                  </h6>
                 </div>
               </div>
-            </>
+              <div className="card-body">
+                <h6 style={{ fontWeight: "bold" }}>{task?.title}</h6>
+                <p className="card-text">{task?.description}</p>
+                <h6>Date : {task?.createdAt?.substring(0, 10)}</h6>
+              </div>
+            </div>
           ))
         )}
       </div>

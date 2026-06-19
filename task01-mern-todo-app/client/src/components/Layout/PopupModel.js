@@ -1,6 +1,7 @@
 import React from "react";
 import toast from "react-hot-toast";
 import todoServices from "../../Services/TodoService";
+import { getErrorMessage } from "../../utils/ErrorMessage";
 
 const PopupModel = ({
   title,
@@ -34,7 +35,7 @@ const PopupModel = ({
       setDescription("");
     } catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.error(getErrorMessage(error));
     }
   };
   return (

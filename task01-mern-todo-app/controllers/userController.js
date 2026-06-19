@@ -7,7 +7,7 @@ const registerController = async (req, res) => {
     const { username, email, password } = req.body;
     //validation
     if (!username || !email || !password) {
-      return res.status(500).send({
+      return res.status(400).send({
         success: false,
         message: "Please provide all fields",
       });
@@ -15,7 +15,7 @@ const registerController = async (req, res) => {
     // check existing user
     const existingUSer = await userModel.findOne({ email });
     if (existingUSer) {
-      return res.status(500).send({
+      return res.status(400).send({
         success: false,
         message: "user already exists",
       });
@@ -58,7 +58,7 @@ const loginController = async (req, res) => {
     // match password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(500).send({
+      return res.status(400).send({
         success: false,
         message: "invalid credentials",
       });

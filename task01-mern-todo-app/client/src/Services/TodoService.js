@@ -1,12 +1,22 @@
 import axios from "axios";
 
-// get user token
-
-const user = JSON.parse(localStorage.getItem("todoapp"));
-
-// default auth header
-
-axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
+// Add a request interceptor to dynamically add the token to every request
+axios.interceptors.request.use(
+  (config) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("todoapp"));
+      if (user && user.token) {
+        config.headers["Authorization"] = `bearer ${user.token}`;
+      }
+    } catch (e) {
+      console.error("Error reading token from localStorage:", e);
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // create todo
 
@@ -17,7 +27,7 @@ const createTodo = (data) => {
 // get all todo
 
 const getAllTodo = (id) => {
-  return axios.post(`/todo/getAll/${id}`);
+  return axios.get(`/todo/getAll/${id}`);
 };
 
 // Update Todo

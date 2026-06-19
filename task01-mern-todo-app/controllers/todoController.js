@@ -2,26 +2,26 @@ const todoModel = require("../models/todoModel");
 
 const createTodoController = async (req, res) => {
   try {
-    const { title, description, isCompleted, createdBy } = req.body;
+    const { title, description } = req.body;
+    const createdBy = req.body.id; // injected by authMiddleware from verified JWT
     if (!title || !description) {
-      return res.status(500).send({
+      return res.status(400).send({
         success: false,
-        message: "please provide title and description",
+        message: "Please provide title and description",
       });
     }
     const todo = new todoModel({ title, description, createdBy });
-    const result = await todo.save();
-    res.status(201).send({
+    const saved = await todo.save();
+    return res.status(201).send({
       success: true,
-      message: "task created successfully",
-      result,
+      message: "Task created successfully",
+      todo: saved,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).send({
+    console.error("createTodo error:", error);
+    return res.status(500).send({
       success: false,
-      message: "error in created todo api",
-      error,
+      message: "Server error while creating task",
     });
   }
 };
@@ -33,7 +33,7 @@ const getTodoController = async (req, res) => {
     const { userId } = req.params;
     // validate
     if (!userId) {
-      return res.status(404).send({
+      return res.status(400).send({
         success: false,
         message: "no user found with this id",
       });
@@ -42,7 +42,7 @@ const getTodoController = async (req, res) => {
     const todos = await todoModel.find({ createdBy: userId });
     if (!todos) {
       return res.status(404).send({
-        success: true,
+        success: false,
         message: "no todo found",
       });
     }
@@ -67,13 +67,13 @@ const deleteTodoController = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(404).send({
+      return res.status(400).send({
         success: false,
         message: "no todo found with id",
       });
     }
     // find id
-    const todo = await todoModel.findByIdAndDelete({ _id: id });
+    const todo = await todoModel.findByIdAndDelete(id);
     if (!todo) {
       return res.status(404).send({
         success: false,
@@ -101,16 +101,17 @@ const updateTodoController = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(404).send({
+      return res.status(400).send({
         success: false,
         message: "please provide todo id",
       });
     }
-    const data = req.body;
+    const { title, description, isCompleted } = req.body;
+    const createdBy = req.body.id; // injected by authMiddleware from verified JWT
     //update
     const todo = await todoModel.findByIdAndUpdate(
       id,
-      { $set: data },
+      { $set: { title, description, isCompleted, createdBy } },
       { returnOriginal: false },
     );
     res.status(200).send({
