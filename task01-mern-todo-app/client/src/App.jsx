@@ -1,9 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Landing from "./pages/Landing/Landing";
+import Home from "./pages/Home/Home";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Todos from "./pages/Todos/Todos";
-import Home from "./pages/Home/Home";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Navbar from "./components/Layout/Navbar";
 import { Toaster } from "react-hot-toast";
 
 const ProtectedRoute = ({ children }) => {
@@ -15,15 +16,16 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <div>
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/home"
+          path="/dashboard"
           element={
             <ProtectedRoute>
-              <Home />
+              <Dashboard />
             </ProtectedRoute>
           }
         />
@@ -36,7 +38,14 @@ function App() {
           }
         />
       </Routes>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          style: {
+            background: "#7c3aed",
+            color: "#ffffff",
+          },
+        }}
+      />
     </div>
   );
 }

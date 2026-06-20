@@ -1,118 +1,46 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../../components/Layout/Navbar";
-import CreateTodoModal from "../../components/Layout/CreateTodoModal";
-import todoServices from "../../services/TodoService";
-import TodoCard from "../../components/Card/TodoCard";
-import Spinner from "../../components/Layout/Spinner";
-import EditTodoModal from "../../components/Layout/EditTodoModal";
-import { Plus, Search, ClipboardList } from "lucide-react";
+import React from "react";
+import { Link } from "react-router-dom";
+const todoImg = "/images/todo.png";
 
 const Home = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [allTask, setAllTask] = useState([]);
-  const [editingTask, setEditingTask] = useState(null);
-
-  // handle modal
-  const openModalHandler = () => {
-    setShowModal(true);
-  };
-
-  // search
-  const handleSearch = (e) => {
-    const query = e.target.value;
-    let filterList = allTask?.filter((item) =>
-      item.title.toLowerCase().match(query.toLowerCase()),
-    );
-    setSearchQuery(query);
-    if (query && filterList.length > 0) {
-      setAllTask(filterList && filterList);
-    } else {
-      getUserTask();
-    }
-  };
-
-  // get user todos
-  const userData = JSON.parse(localStorage.getItem("todoapp"));
-  const id = userData && userData.user.id;
-  const getUserTask = async () => {
-    setLoading(true);
-    try {
-      const { data } = await todoServices.getAllTodo(id);
-      setLoading(false);
-      setAllTask(data?.todos || []);
-    } catch (error) {
-      setLoading(false);
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getUserTask();
-  }, []);
-
   return (
-    <>
-      <Navbar />
-      <div className="max-w-5xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-white">Your Tasks</h1>
-            <p className="text-sm text-zinc-500 mt-1">Manage and track your daily activities</p>
+    <div className="max-w-5xl mx-auto px-6">
+      {/* Main Content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-12 py-6 md:py-12">
+        <div className="flex flex-col justify-center text-center md:text-left">
+          <span className="text-xs font-medium tracking-widest text-zinc-500 uppercase mb-4">
+            Task Management
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-white leading-tight">
+            Manage tasks <br /> effortlessly.
+          </h1>
+          <p className="text-base text-zinc-400 leading-relaxed mt-4 max-w-md mx-auto md:mx-0">
+            A beautiful and intuitive task manager designed to help you organize, prioritize, and track your daily to-dos with complete ease and focus.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+            <Link
+              className="inline-flex items-center justify-center bg-violet-600 hover:bg-violet-700 text-white rounded-lg px-6 h-10 font-medium text-sm transition-colors w-full sm:w-auto"
+              to="/register"
+            >
+              Register Now
+            </Link>
+            <Link
+              className="inline-flex items-center justify-center border border-[#1f1f1f] hover:bg-[#111111] text-white rounded-lg px-6 h-10 font-medium text-sm transition-colors w-full sm:w-auto"
+              to="/login"
+            >
+              Login
+            </Link>
           </div>
-          <button
-            className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-            onClick={openModalHandler}
-          >
-            <Plus className="w-4 h-4" /> Create Task
-          </button>
         </div>
-
-        <div className="relative mt-6">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
-          <input
-            type="text"
-            className="w-full bg-[#0a0a0a] border border-[#1f1f1f] rounded-lg pl-10 pr-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-600"
-            placeholder="Search your task"
-            value={searchQuery}
-            onChange={handleSearch}
+        <div className="bg-violet-600/5 rounded-2xl p-6 flex justify-center items-center">
+          <img
+            className="object-contain max-h-[300px] sm:max-h-[500px] w-full"
+            src={todoImg}
+            alt="heroImg"
           />
         </div>
-
-        {loading ? (
-          <Spinner />
-        ) : allTask.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center mt-20">
-            <ClipboardList className="h-10 w-10 text-zinc-600" />
-            <h3 className="text-zinc-400 text-sm mt-3">No tasks found</h3>
-            <p className="text-zinc-600 text-xs mt-1">Get started by creating your first task.</p>
-          </div>
-        ) : (
-          <TodoCard allTask={allTask} getUserTask={getUserTask} onEdit={setEditingTask} />
-        )}
-
-        {/* ============Modal============ */}
-        <CreateTodoModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          title={title}
-          setTitle={setTitle}
-          description={description}
-          setDescription={setDescription}
-          getUserTask={getUserTask}
-        />
-        {editingTask && (
-          <EditTodoModal
-            editingTask={editingTask}
-            onClose={() => setEditingTask(null)}
-            getUserTask={getUserTask}
-          />
-        )}
       </div>
-    </>
+    </div>
   );
 };
 

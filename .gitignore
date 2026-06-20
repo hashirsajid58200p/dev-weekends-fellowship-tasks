@@ -103,6 +103,7 @@ dist
 # Gatsby files
 .cache/
 public/
+!task01-mern-todo-app/client/public/
 
 # vuepress build output
 .vuepress/dist

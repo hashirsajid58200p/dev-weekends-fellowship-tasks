@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../../components/Layout/Navbar";
 import todoServices from "../../services/TodoService";
 import Spinner from "../../components/Layout/Spinner";
 import toast from "react-hot-toast";
@@ -62,7 +61,6 @@ const Todos = () => {
 
   return (
     <>
-      <Navbar />
       <div className="max-w-5xl mx-auto px-6 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
