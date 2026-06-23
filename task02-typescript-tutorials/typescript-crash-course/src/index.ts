@@ -107,7 +107,13 @@ const sub: MathFunc = (x: number, y: number): number => x - y;
 
 // classes
 
-class Person {
+interface PersonInterface {
+  id: number;
+  name: string;
+  register(): string;
+}
+
+class Person implements PersonInterface {
   id: number;
   name: string;
 
@@ -127,3 +133,26 @@ const person2 = new Person(2, "Mike");
 console.log(person2);
 // id = "5"
 // console.log(id)
+
+// Sub class or extending a class
+
+class Employee extends Person {
+  position: string;
+
+  constructor(id: number, name: string, position: string) {
+    super(id, name);
+    this.position = position;
+  }
+}
+
+const emp = new Employee(3, "Shawn", "Developer");
+
+// Generics
+
+function getArray<T>(items: T[]): T[] {
+  return new Array().concat(items);
+}
+
+let numArray = getArray<number>([1, 2, 3]);
+let strArray = getArray<string>(["hello", "world"]);
+strArray.push("hello");
